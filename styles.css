@@ -214,3 +214,9 @@ canvas {
         width: 100%; /* Full-width buttons on small screens */
     }
 }
+
+.btn {
+    -webkit-border-radius: 5px; /* For Safari */
+    -moz-border-radius: 5px;    /* For Firefox */
+    border-radius: 5px;         /* Standard */
+}
