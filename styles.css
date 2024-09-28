@@ -220,3 +220,20 @@ canvas {
     -moz-border-radius: 5px;    /* For Firefox */
     border-radius: 5px;         /* Standard */
 }
+
+
+
+.quotes-section {
+    margin: 20px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+#quote-text {
+    font-size: 18px;
+    color: #333;
+    font-style: italic;
+}
