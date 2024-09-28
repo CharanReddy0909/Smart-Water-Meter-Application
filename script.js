@@ -1,349 +1,222 @@
-// To store the daily water usage and date
-let waterUsageHistory = [];
-
-// Initialize total water used and eco points
-let totalWaterUsed = 0;
-let totalEcoPoints = 0; // New variable for total eco points
-
-// Chart.js setup
-const dailyUsageChartCtx = document.getElementById('dailyUsageChart').getContext('2d');
-const weeklyUsageChartCtx = document.getElementById('weeklyUsageChart').getContext('2d');
-const monthlyUsageChartCtx = document.getElementById('monthlyUsageChart').getContext('2d');
-
-let dailyUsageChart;
-let weeklyUsageChart;
-let monthlyUsageChart;
-
-// Event Listener for Daily Usage Button
-document.getElementById('daily-usage-btn').addEventListener('click', function() {
-    // Prompt user for daily water usage and date
-    let dailyUsage = prompt("Enter today's water usage in liters:");
-    let currentDate = prompt("Enter the current date (e.g., YYYY-MM-DD):");
-
-    // Ensure input is a number and valid date
-    if (!isNaN(dailyUsage) && dailyUsage > 0 && Date.parse(currentDate)) {
-        // Store data in water usage history
-        waterUsageHistory.push({ date: currentDate, usage: parseFloat(dailyUsage) });
-
-        // Update total water used
-        totalWaterUsed += parseFloat(dailyUsage);
-
-        // Calculate points based on daily usage
-        let pointsEarned = calculatePoints(dailyUsage);
-        totalEcoPoints += pointsEarned; // Update total eco points
-
-        // Update water used on the UI
-        document.getElementById('water-used').innerText = `${totalWaterUsed.toFixed(2)} L`; // Display cumulative total
-
-        // Update eco points on the UI
-        document.getElementById('eco-points').innerText = `${totalEcoPoints}`; // Display cumulative eco points
-
-        // Update the eco points share message dynamically
-        updateEcoPointsShare(totalEcoPoints);
-
-        // Update charts
-        updateCharts();
-
-        alert("Data recorded successfully for " + currentDate);
-    } else {
-        alert('Please enter valid water usage and date.');
-    }
-});
-
-// Function to update the eco points share message in "Share Your Achievements!"
-function updateEcoPointsShare(points) {
-    const shareMessageElement = document.getElementById('eco-points-share');
-    shareMessageElement.innerText = `You've earned ${points} Eco Points!`;
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom right, #e0f7fa, #80deea);
 }
 
-// Function to update charts
-function updateCharts() {
-    // Prepare data for daily chart
-    const dates = waterUsageHistory.map(record => record.date);
-    const usages = waterUsageHistory.map(record => record.usage);
-
-    // Update Daily Usage Chart
-    if (dailyUsageChart) {
-        dailyUsageChart.data.labels = dates;
-        dailyUsageChart.data.datasets[0].data = usages;
-        dailyUsageChart.update();
-    } else {
-        dailyUsageChart = new Chart(dailyUsageChartCtx, {
-            type: 'line',
-            data: {
-                labels: dates,
-                datasets: [{
-                    label: 'Daily Water Usage (L)',
-                    data: usages,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    }
-
-    // Update Weekly Usage Chart
-    updateWeeklyChart();
-    
-    // Update Monthly Usage Chart
-    updateMonthlyChart();
+.container {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
 }
 
-// Function to update Weekly Chart
-function updateWeeklyChart() {
-    const weeklyData = {};
-    
-    waterUsageHistory.forEach(record => {
-        const weekStart = new Date(record.date);
-        weekStart.setDate(weekStart.getDate() - weekStart.getDay()); // Get start of the week (Sunday)
-        const weekKey = weekStart.toISOString().split('T')[0]; // Format: YYYY-MM-DD
-        
-        if (!weeklyData[weekKey]) {
-            weeklyData[weekKey] = 0;
-        }
-        weeklyData[weekKey] += record.usage;
-    });
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
 
-    const weeklyLabels = Object.keys(weeklyData);
-    const weeklyUsages = Object.values(weeklyData);
+.navbar ul {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+}
 
-    if (weeklyUsageChart) {
-        weeklyUsageChart.data.labels = weeklyLabels;
-        weeklyUsageChart.data.datasets[0].data = weeklyUsages;
-        weeklyUsageChart.update();
-    } else {
-        weeklyUsageChart = new Chart(weeklyUsageChartCtx, {
-            type: 'bar',
-            data: {
-                labels: weeklyLabels,
-                datasets: [{
-                    label: 'Weekly Water Usage (L)',
-                    data: weeklyUsages,
-                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+.navbar ul li {
+    display: inline;
+    margin: 0 10px;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: #007bff;
+    transition: color 0.3s;
+}
+
+.navbar ul li a:hover {
+    color: #0056b3;
+}
+
+.water-meter {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #4caf50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.inner-circle h2 {
+    color: white;
+    margin: 0;
+    font-size: 24px;
+}
+
+.points-section {
+    text-align: center;
+}
+
+.points {
+    font-size: 32px;
+    font-weight: bold;
+    color: #4caf50;
+}
+
+.buttons {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.buttons .btn {
+    padding: 10px 20px;
+    margin: 5px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s; /* Added transform for active state */
+}
+
+.buttons .btn:hover {
+    background-color: #388e3c;
+}
+
+.buttons .btn:active {
+    transform: scale(0.98); /* Slightly shrink button on click */
+}
+
+.education-section,
+.about-section,
+.settings-section {
+    margin: 20px 0;
+}
+
+.video {
+    text-align: center;
+}
+
+.charts {
+    margin: 20px 0;
+}
+
+canvas {
+    margin: 10px;
+    border: 1px solid #ccc;
+}
+
+.faq-section {
+    margin: 20px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.faq-item {
+    margin: 10px 0;
+}
+
+.faq-question {
+    cursor: pointer;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.faq-answer {
+    display: none;
+    padding: 5px 0;
+    color: #333;
+}
+
+.blog-section {
+    margin: 20px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.blog-post {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.post-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.post-summary {
+    color: #666;
+}
+
+.read-more-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.read-more-btn:hover {
+    background-color: #0056b3;
+}
+
+.share-section {
+    margin: 20px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.share-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    margin: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.share-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+
+    .buttons .btn {
+        width: 100%; /* Full-width buttons on small screens */
     }
 }
 
-// Function to update Monthly Chart
-function updateMonthlyChart() {
-    const monthlyData = {};
-    
-    waterUsageHistory.forEach(record => {
-        const monthKey = new Date(record.date).toISOString().slice(0, 7); // Format: YYYY-MM
-        
-        if (!monthlyData[monthKey]) {
-            monthlyData[monthKey] = 0;
-        }
-        monthlyData[monthKey] += record.usage;
-    });
-
-    const monthlyLabels = Object.keys(monthlyData);
-    const monthlyUsages = Object.values(monthlyData);
-
-    if (monthlyUsageChart) {
-        monthlyUsageChart.data.labels = monthlyLabels;
-        monthlyUsageChart.data.datasets[0].data = monthlyUsages;
-        monthlyUsageChart.update();
-    } else {
-        monthlyUsageChart = new Chart(monthlyUsageChartCtx, {
-            type: 'line',
-            data: {
-                labels: monthlyLabels,
-                datasets: [{
-                    label: 'Monthly Water Usage (L)',
-                    data: monthlyUsages,
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    }
+.btn {
+    -webkit-border-radius: 5px; /* For Safari */
+    -moz-border-radius: 5px;    /* For Firefox */
+    border-radius: 5px;         /* Standard */
 }
-// Function to share on Facebook
-document.getElementById('share-facebook').addEventListener('click', function() {
-    const ecoPoints = document.getElementById('eco-points').innerText;
-    const url = encodeURIComponent(window.location.href); // Get the current page URL
-    const message = `I've earned ${ecoPoints} Eco Points! Check out this app: ${url}`;
-    
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${encodeURIComponent(message)}`, '_blank');
-});
-
-// Function to share on Twitter
-document.getElementById('share-twitter').addEventListener('click', function() {
-    const ecoPoints = document.getElementById('eco-points').innerText;
-    const url = encodeURIComponent(window.location.href);
-    const message = `I've earned ${ecoPoints} Eco Points! Check out this app: ${url}`;
-    
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}&url=${url}`, '_blank');
-});
-
-// Function to share on WhatsApp
-document.getElementById('share-whatsapp').addEventListener('click', function() {
-    const ecoPoints = document.getElementById('eco-points').innerText;
-    const message = `I've earned ${ecoPoints} Eco Points! Check out this app: ${window.location.href}`;
-    
-    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
-});
-
-
-// Event Listener for Monthly Report Button
-document.getElementById('monthly-report-btn').addEventListener('click', function() {
-    // Calculate monthly usage by summing up the water usage history
-    if (waterUsageHistory.length === 0) {
-        alert("No data recorded yet.");
-        return;
-    }
-
-    let totalUsage = waterUsageHistory.reduce((total, record) => total + record.usage, 0);
-    let averageUsage = (totalUsage / waterUsageHistory.length).toFixed(2);
-
-    // Show the monthly report
-    alert("Total Water Usage for the Month: " + totalUsage + " L\nAverage Daily Usage: " + averageUsage + " L");
-});
-
-// Event Listener for View History Button
-document.getElementById('view-history-btn').addEventListener('click', function() {
-    if (waterUsageHistory.length === 0) {
-        alert("No data recorded yet.");
-        return;
-    }
-
-    let historyText = waterUsageHistory.map(record => `Date: ${record.date}, Usage: ${record.usage} L`).join('\n');
-    alert("Water Usage History:\n" + historyText);
-});
-
-// Calculate eco points based on water usage
-function calculatePoints(usage) {
-    let points;
-    if (usage <= 50) {
-        points = 300;
-    } else if (usage <= 100) {
-        points = 200;
-    } else if (usage <= 150) {
-        points = 100;
-    } else {
-        points = 50;
-    }
-    return points;
-}
-
-// Initialize empty charts on load
-initializeEmptyCharts();
-
-// Function to initialize empty charts
-function initializeEmptyCharts() {
-    dailyUsageChart = new Chart(dailyUsageChartCtx, {
-        type: 'line',
-        data: {
-            labels: [],
-            datasets: [{
-                label: 'Daily Water Usage (L)',
-                data: [],
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-
-    weeklyUsageChart = new Chart(weeklyUsageChartCtx, {
-        type: 'bar',
-        data: {
-            labels: [],
-            datasets: [{
-                label: 'Weekly Water Usage (L)',
-                data: [],
-                backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-
-    monthlyUsageChart = new Chart(monthlyUsageChartCtx, {
-        type: 'line',
-        data: {
-            labels: [],
-            datasets: [{
-                label: 'Monthly Water Usage (L)',
-                data: [],
-                borderColor: 'rgba(255, 99, 132, 1)',
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-}
-
-// Function to initialize FAQ section
-function initFAQ() {
-    const questions = document.querySelectorAll('.faq-question');
-    
-    questions.forEach(question => {
-        question.addEventListener('click', function() {
-            const answer = this.nextElementSibling;
-            if (answer.style.display === "none" || answer.style.display === "") {
-                answer.style.display = "block"; // Show answer
-            } else {
-                answer.style.display = "none"; // Hide answer
-            }
-        });
-    });
-}
-
-// Call the initFAQ function when the document is ready
-document.addEventListener('DOMContentLoaded', initFAQ);
