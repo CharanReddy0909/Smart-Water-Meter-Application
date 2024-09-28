@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Water Meter App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1>Smart Water Meter</h1>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav class="navbar">
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#settings">Settings</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Section -->
+        <div class="water-meter">
+            <div class="circle">
+                <div class="inner-circle">
+                    <h2 id="water-used">0L</h2>
+                    <p>Water Used</p>
+                </div>
+            </div>
+        </div>
+        <div id="eco-points-message">You've earned 0 Eco Points!</div>
+
+        <div class="points-section">
+            <h2>Eco Points Earned</h2>
+            <span class="points" id="eco-points">0</span>
+        </div>
+        <div class="share-section">
+            <h2>Share Your Achievements!</h2>
+            <p>You've earned <span id="eco-points-share">You've earned 0 Eco Points!</span></p>
+            <button id="share-facebook" class="share-btn">Share on Facebook</button>
+            <button id="share-twitter" class="share-btn">Share on Twitter</button>
+            <button id="share-whatsapp" class="share-btn">Share on WhatsApp</button>
+        </div>
+        
+
+        <div class="buttons">
+            <button class="btn" id="daily-usage-btn">Daily Usage</button>
+            <button class="btn" id="monthly-report-btn">Monthly Report</button>
+            <button class="btn" id="view-history-btn">View History</button>
+        </div>
+<!-- Chart Section -->
+<div class="charts">
+    <h2>Water Usage Charts</h2>
+    <canvas id="dailyUsageChart" width="400" height="200"></canvas>
+    <canvas id="weeklyUsageChart" width="400" height="200"></canvas>
+    <canvas id="monthlyUsageChart" width="400" height="200"></canvas>
+</div>
+<div class="faq-section">
+    <h2>Frequently Asked Questions (FAQ)</h2>
+    <div class="faq-item">
+        <h3 class="faq-question">What is water conservation?</h3>
+        <p class="faq-answer">Water conservation is the practice of using water efficiently to reduce unnecessary water usage. It helps to ensure that water supplies are sustainable for future generations.</p>
+    </div>
+    <div class="faq-item">
+        <h3 class="faq-question">How can I save water at home?</h3>
+        <p class="faq-answer">You can save water by fixing leaks, using water-efficient appliances, taking shorter showers, and turning off the tap while brushing your teeth.</p>
+    </div>
+    <div class="faq-item">
+        <h3 class="faq-question">How does this app help me?</h3>
+        <p class="faq-answer">This app helps you track your daily water usage, view reports, and encourages you to conserve water by earning eco points for reducing your usage.</p>
+    </div>
+    <div class="faq-item">
+        <h3 class="faq-question">How can I record my water usage?</h3>
+        <p class="faq-answer">You can record your daily water usage by clicking on the "Daily Usage" button and entering the amount of water used.</p>
+    </div>
+</div>
+<div class="blog-section">
+    <h2>Blog on Water Conservation</h2>
+    
+    <div class="blog-post">
+        <h3 class="post-title">10 Simple Ways to Save Water at Home</h3>
+        <p class="post-summary">Discover easy and effective methods to reduce water consumption in your daily routine.</p>
+        <button class="read-more-btn">Read More</button>
+    </div>
+    
+    <div class="blog-post">
+        <h3 class="post-title">The Importance of Water Conservation</h3>
+        <p class="post-summary">Learn why conserving water is crucial for the environment and future generations.</p>
+        <button class="read-more-btn">Read More</button>
+    </div>
+
+    <div class="blog-post">
+        <h3 class="post-title">How Water Waste Affects the Environment</h3>
+        <p class="post-summary">Understand the impact of water waste on our ecosystems and communities.</p>
+        <button class="read-more-btn">Read More</button>
+    </div>
+</div>
+
+        <!-- Educational Section -->
+        <div class="education-section" id="home">
+            <h2>Water Conservation Tips & Videos</h2>
+
+            <!-- Video Embed -->
+            <div class="video">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/C65iqOSCZOY?si=p14xXZxuH5eBjLyq" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+            </div>
+        </div>
+        
+        
+        <!-- About Us Section -->
+        <div class="about-section" id="about">
+            <h2>About Us</h2>
+            <p>We are committed to helping users save water and earn rewards for their conservation efforts. Our app monitors real-time water usage, offers tips for saving water, and helps you reduce your environmental footprint.</p>
+        </div>
+
+        <!-- Settings Section -->
+        <div class="settings-section" id="settings">
+            <h2>Settings</h2>
+            <p>Adjust your preferences here:</p>
+            <button class="btn">Change Notifications</button>
+            <button class="btn">Update Profile</button>
+            <button class="btn">App Settings</button>
+        </div>
+    </div>
+
+
+    <!-- Link to JavaScript file -->
+    <script src="script.js"></script>
+</body>
+</html>
